@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
   before_action :require_user_logged_in, only: [:index, :show]
-  include SessionsHelper
   
   def index
     @users = User.order(id: :desc).page(params[:page]).per(25)
@@ -8,6 +7,8 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+    @microposts = @user.microposts.order(id: :desc).page(params[:page])
+    counts(@user)
   end
 
   def new
@@ -32,9 +33,4 @@ class UsersController < ApplicationController
     params.require(:user).permit(:name, :email, :password, :password_confirmation)
   end
   
-  def require_user_logged_in
-    unless logged_in?
-      redirect_to login_url
-    end
-  end
 end
