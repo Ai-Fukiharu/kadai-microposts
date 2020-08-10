@@ -16,6 +16,7 @@ class User < ApplicationRecord
   
   has_many :favorites
   has_many :favorite_posts, through: :favorites, source: :micropost
+  has_many :destroier, dependent: :destroy
   
   def follow(other_user)
     unless self == other_user
